@@ -1,0 +1,124 @@
+@import "tailwindcss";
+
+:root {
+  /* Brand colors */
+  --color-ink: #050505;
+  --color-charcoal: #101010;
+  --color-ivory: #f5f1e8;
+  --color-warmgray: #b8b2a6;
+
+  /* Gold palette (metallic luxury) */
+  --color-gold-100: #fff1b0;
+  --color-gold-300: #ffd766;
+  --color-gold-500: #f7c948;
+  --color-gold-700: #d4af37;
+  --color-gold-900: #b8860b;
+
+  /* Typography */
+  --font-serif: var(--font-cormorant);
+  --font-sans: var(--font-inter);
+}
+
+@theme {
+  --color-ink: var(--color-ink);
+  --color-charcoal: var(--color-charcoal);
+  --color-ivory: var(--color-ivory);
+  --color-warmgray: var(--color-warmgray);
+  --color-gold-100: var(--color-gold-100);
+  --color-gold-300: var(--color-gold-300);
+  --color-gold-500: var(--color-gold-500);
+  --color-gold-700: var(--color-gold-700);
+  --color-gold-900: var(--color-gold-900);
+  --font-serif: var(--font-serif);
+  --font-sans: var(--font-sans);
+}
+
+@layer base {
+  /* Reset and base styles */
+  html {
+    scroll-behavior: smooth;
+    background: var(--color-ink);
+  }
+
+  body {
+    @apply bg-ink text-ivory antialiased;
+    font-family: var(--font-sans);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-serif);
+  }
+
+  /* Custom scrollbar styling */
+  ::-webkit-scrollbar {
+    @apply w-3;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-charcoal;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gold-700 rounded-full hover:bg-gold-500;
+  }
+
+  /* Selection styling */
+  ::selection {
+    @apply bg-gold-700 text-ink;
+  }
+
+  /* Keep default cursor */
+
+  /* Utility: disable scroll */
+  body.no-scroll {
+    @apply overflow-hidden;
+  }
+}
+
+@layer utilities {
+  /* Noise texture overlay */
+  .noise-bg::before {
+    @apply fixed inset-0 pointer-events-none z-0;
+    content: "";
+    background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" /></filter><rect width="200" height="200" filter="url(%23noise)" opacity="0.05"/></svg>');
+    background-repeat: repeat;
+    mix-blend-mode: overlay;
+  }
+
+  /* Gold glow effect */
+  .gold-glow {
+    @apply shadow-[0_0_40px_-10px_rgba(212,175,55,0.35)];
+  }
+
+  /* Luxury tracking (letter spacing) */
+  .tracking-luxury {
+    @apply tracking-[0.2em];
+  }
+
+  /* Content wrapper for main content above noise */
+  .content-wrapper {
+    @apply relative z-10;
+  }
+}
+
+/* Static ambient gold gradient background */
+.gradient-drift {
+  @apply fixed inset-0 pointer-events-none z-0 overflow-hidden;
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(255, 241, 176, 0.08),
+    rgba(212, 175, 55, 0.05) 60%,
+    rgba(184, 134, 11, 0.02) 100%
+  );
+  filter: blur(120px);
+}
+
+/* Prevent layout shift from scrollbar */
+html {
+  overflow-y: scroll;
+}
