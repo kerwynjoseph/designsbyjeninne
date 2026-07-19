@@ -9,6 +9,7 @@ export async function POST(request: NextRequest) {
     const phone = formData.get("phone") as string;
     const projectDetails = formData.get("projectDetails") as string;
     const selectedServices = formData.get("selectedServices") as string;
+    const paymentProof = formData.get("paymentProof") as File | null;
 
     if (!fullName || !email || !phone || !projectDetails || !selectedServices) {
       return NextResponse.json(
@@ -17,7 +18,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const adminEmail = "info@designbyjeninne.com";
+    const adminEmail = "info@designsbyjeninne.com";
 
     // Send confirmation email to client
     const clientConfirmationHtml = `
@@ -55,6 +56,11 @@ export async function POST(request: NextRequest) {
           <h3 style="color: #f7c948; margin-top: 0;">Project Details</h3>
           <p><strong>Services:</strong> ${selectedServices}</p>
           <p><strong>Details:</strong> ${projectDetails}</p>
+        </div>
+
+        <div style="background: #101010; padding: 20px; border-left: 3px solid #f7c948; margin: 20px 0;">
+          <h3 style="color: #f7c948; margin-top: 0;">Payment Proof</h3>
+          <p><strong>File Submitted:</strong> ${paymentProof ? paymentProof.name : "No file uploaded"}</p>
         </div>
 
         <p style="color: #b8b2a6;">Action required: Review payment proof and confirm booking with client.</p>
