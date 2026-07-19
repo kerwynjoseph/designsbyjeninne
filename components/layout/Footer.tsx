@@ -68,11 +68,11 @@ export function Footer() {
             <ul className="space-y-3 font-sans text-sm">
               <li>
                 <a
-                  href="mailto:designsbyjeninne@gmail.com"
+                  href="mailto:info@designbyjeninne.com"
                   className="text-warmgray hover:text-gold-500 transition-colors flex items-center gap-2"
                 >
                   <Mail className="w-4 h-4" />
-                  designsbyjeninne@gmail.com
+                  info@designbyjeninne.com
                 </a>
               </li>
               <li>
@@ -120,8 +120,15 @@ export function Footer() {
           viewport={{ once: true }}
           transition={{ duration: MOTION.normal }}
         >
-          © {currentYear} Designs by Jeninne. All rights reserved. | Built with
-          precision and elegance.
+          © 2026 Designs by Jeninne. All rights reserved. |{" "}
+          <a
+            href="https://hopp.bio/kerwynjphotography"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-gold-500 hover:text-gold-300 transition-colors"
+          >
+            Built by KJ Creative
+          </a>
         </motion.p>
       </div>
     </footer>

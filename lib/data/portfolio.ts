@@ -7,7 +7,7 @@ export const portfolioItems: PortfolioItem[] = [
     category: "Content Videography",
     description: "Professional product content creation for food and beverage brands.",
     isVideo: true,
-    videoUrl: "https://vimeo.com/1210387048/4dee74ad1d?fl=ip&fe=ec",
+    videoUrl: "https://vimeo.com/1210387048?fl=ip&fe=ec",
   },
   {
     id: "carnival-bts",
@@ -23,7 +23,7 @@ export const portfolioItems: PortfolioItem[] = [
     category: "Content Videography",
     description: "Inspiring testimonial from Coach Sermoya sharing personal journey and expertise.",
     isVideo: true,
-    videoUrl: "https://vimeo.com/1210387045/573d59d29e?fl=ip&fe=ec",
+    videoUrl: "https://vimeo.com/1210387045?fl=ip&fe=ec",
   },
   {
     id: "coach-sermoya-highlights",
