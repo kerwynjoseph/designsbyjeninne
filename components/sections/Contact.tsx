@@ -35,7 +35,7 @@ export function Contact() {
                 </h3>
               </div>
               <p className="font-sans text-warmgray leading-relaxed">
-                designsbyjeninne@gmail.com
+                info@designsbyjeninne.com
               </p>
               <p className="font-sans text-xs text-warmgray/60 mt-2">
                 We typically respond within 24 hours.

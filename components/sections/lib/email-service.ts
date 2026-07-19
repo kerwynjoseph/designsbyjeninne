@@ -127,7 +127,7 @@ export function generateClientConfirmationEmail(data: {
 
             <a href="https://designsbyjeninne.com/payment" class="button">Complete Payment →</a>
 
-            <p>If you have any questions, feel free to reach out via WhatsApp at <strong>+1 (868) 344-5101</strong> or email us at <strong>designsbyjeninne@gmail.com</strong>.</p>
+            <p>If you have any questions, feel free to reach out via WhatsApp at <strong>+1 (868) 344-5101</strong> or email us at <strong>info@designsbyjeninne.com</strong>.</p>
 
             <p>Looking forward to creating something amazing with you!</p>
 
@@ -136,7 +136,7 @@ export function generateClientConfirmationEmail(data: {
 
           <div class="footer">
             <p>Designs by Jeninne | Premium Creative Studio<br>
-            Email: designsbyjeninne@gmail.com | WhatsApp: +1 (868) 344-5101</p>
+            Email: info@designsbyjeninne.com | WhatsApp: +1 (868) 344-5101</p>
           </div>
         </div>
       </body>
