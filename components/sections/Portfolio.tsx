@@ -3,9 +3,13 @@
 import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { portfolioItems, portfolioCategories } from "@/lib/data/portfolio";
-import { PortfolioFilter } from "./PortfolioFilter";
 import { MOTION } from "@/lib/motion";
 import { Play, X } from "lucide-react";
+
+function getVimeoId(url: string): string | null {
+  const match = url.match(/vimeo\.com\/(\d+)/);
+  return match ? match[1] : null;
+}
 
 export function Portfolio() {
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -76,16 +80,20 @@ export function Portfolio() {
                     onClick={() => setSelectedVideo(item.videoUrl!)}
                     className="relative aspect-video bg-charcoal rounded-lg overflow-hidden border border-gold-500/20 hover:border-gold-500 transition-all duration-300"
                   >
-                    <video
-                      src={item.videoUrl}
-                      className="w-full h-full object-cover"
-                      onMouseEnter={(e) => {
-                        (e.target as HTMLVideoElement).play();
-                      }}
-                      onMouseLeave={(e) => {
-                        (e.target as HTMLVideoElement).pause();
-                      }}
-                    />
+                    {!getVimeoId(item.videoUrl) ? (
+                      <video
+                        src={item.videoUrl}
+                        className="w-full h-full object-cover"
+                        onMouseEnter={(e) => {
+                          (e.target as HTMLVideoElement).play();
+                        }}
+                        onMouseLeave={(e) => {
+                          (e.target as HTMLVideoElement).pause();
+                        }}
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-charcoal to-charcoal/80" />
+                    )}
                     <div className="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition-all duration-300 flex items-center justify-center">
                       <motion.div
                         whileHover={{ scale: 1.1 }}
@@ -137,12 +145,21 @@ export function Portfolio() {
               onClick={(e) => e.stopPropagation()}
               className="relative w-full max-w-4xl flex flex-col items-center"
             >
-              <video
-                src={selectedVideo}
-                className="w-full h-auto max-h-[70vh] object-contain rounded-lg"
-                autoPlay
-                controls
-              />
+              {getVimeoId(selectedVideo) ? (
+                <iframe
+                  src={`https://player.vimeo.com/video/${getVimeoId(selectedVideo)}`}
+                  className="w-full h-auto aspect-video rounded-lg"
+                  allow="autoplay; fullscreen; picture-in-picture"
+                  allowFullScreen
+                />
+              ) : (
+                <video
+                  src={selectedVideo}
+                  className="w-full h-auto max-h-[70vh] object-contain rounded-lg"
+                  autoPlay
+                  controls
+                />
+              )}
               {/* Close button below player */}
               <motion.button
                 initial={{ opacity: 0, y: -10 }}
