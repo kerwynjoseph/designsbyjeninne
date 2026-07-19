@@ -5,15 +5,15 @@ import { MOTION } from "@/lib/motion";
 
 const stats = [
   {
-    number: "100+",
+    number: "10+",
     label: "Creative Services",
   },
   {
-    number: "50+",
+    number: "10+",
     label: "Branding Projects",
   },
   {
-    number: "75+",
+    number: "10+",
     label: "Content Campaigns",
   },
   {
