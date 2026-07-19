@@ -5,16 +5,20 @@ import { MOTION } from "@/lib/motion";
 
 const stats = [
   {
-    number: "50+",
+    number: "100+",
     label: "Creative Services",
   },
   {
-    number: "10",
+    number: "50+",
     label: "Branding Projects",
   },
   {
-    number: "10",
+    number: "75+",
     label: "Content Campaigns",
+  },
+  {
+    number: "98+",
+    label: "Client Satisfaction %",
   },
 ];
 
@@ -22,7 +26,7 @@ export function Stats() {
   return (
     <section className="py-16 md:py-24 px-6 md:px-12 bg-charcoal/50 border-y border-gold-500/20">
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           {stats.map((stat, index) => (
             <motion.div
               key={stat.label}
