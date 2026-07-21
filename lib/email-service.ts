@@ -15,12 +15,17 @@ export async function sendEmail({
   from = FROM_EMAIL,
 }: SendEmailParams): Promise<{ success: boolean; error?: string }> {
   if (!RESEND_API_KEY) {
-    console.warn("RESEND_API_KEY not configured - emails will not be sent");
+    console.error(
+      "RESEND_API_KEY not configured - emails will not be sent. Available env keys:",
+      Object.keys(process.env).filter((k) => k.includes("RESEND"))
+    );
     return {
       success: false,
       error: "Email service not configured",
     };
   }
+
+  console.log("Sending email to:", to, "from:", from);
 
   try {
     const response = await fetch("https://api.resend.com/emails", {
