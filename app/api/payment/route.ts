@@ -18,9 +18,9 @@ export async function POST(request: NextRequest) {
     const selectedAddOnsStr = formData.get("selectedAddOns") as string;
     const estimatedTotal = formData.get("estimatedTotal") as string;
 
-    if (!fullName || !email || !phone || !projectDetails || !selectedServices) {
+    if (!fullName || !email || !phone) {
       return NextResponse.json(
-        { error: "Missing required fields" },
+        { error: "Missing required fields: name, email, and phone" },
         { status: 400 }
       );
     }
@@ -172,15 +172,27 @@ export async function POST(request: NextRequest) {
                 : ""
             }
 
+            ${
+              projectDetails
+                ? `
             <div class="section">
               <div class="section-title">Project Details</div>
               <div style="background: #101010; padding: 15px; border-left: 4px solid #F7C948; white-space: pre-wrap; color: #F5F1E8; font-family: monospace; font-size: 12px;">${projectDetails}</div>
             </div>
+            `
+                : ""
+            }
 
+            ${
+              selectedServices
+                ? `
             <div class="section">
               <div class="section-title">Services Selected</div>
               <div style="background: #101010; padding: 15px; color: #F5F1E8;">${selectedServices}</div>
             </div>
+            `
+                : ""
+            }
 
             <div class="section">
               <div class="section-title">Payment Proof</div>
