@@ -5,6 +5,8 @@ import { motion } from "framer-motion";
 import { MOTION } from "@/lib/motion";
 import { useBooking } from "@/lib/booking-context";
 import { useRouter } from "next/navigation";
+import { Calendar } from "@/components/shared/Calendar";
+import { TimePicker } from "@/components/shared/TimePicker";
 
 const projectTypes = [
   "Content Videography",
@@ -40,6 +42,7 @@ export function ProjectInquiryForm() {
     projectType: "",
     budget: "",
     preferredDate: "",
+    preferredTime: "",
     message: "",
   });
 
@@ -93,6 +96,8 @@ export function ProjectInquiryForm() {
       if (!formData.budget) fieldErrors.budget = "Please select a budget range";
       if (!formData.preferredDate)
         fieldErrors.preferredDate = "Please select a preferred date";
+      if (!formData.preferredTime)
+        fieldErrors.preferredTime = "Please select a preferred time";
       if (!formData.message.trim())
         fieldErrors.message = "Project details are required";
 
@@ -110,6 +115,8 @@ export function ProjectInquiryForm() {
         packagePrice: booking.packagePrice,
         selectedAddOns: booking.selectedAddOns,
         estimatedTotal: booking.estimatedTotal,
+        appointmentDate: formData.preferredDate,
+        appointmentTime: formData.preferredTime,
       };
 
       // Submit inquiry to API
@@ -129,6 +136,7 @@ export function ProjectInquiryForm() {
           projectType: "",
           budget: "",
           preferredDate: "",
+          preferredTime: "",
           message: "",
         });
       } else {
@@ -333,20 +341,32 @@ export function ProjectInquiryForm() {
         )}
       </div>
 
-      {/* Preferred Date */}
+      {/* Preferred Date - Calendar */}
       <div>
         <label className="block font-sans text-sm font-medium text-ivory mb-3">
           Preferred Date
         </label>
-        <input
-          type="date"
-          name="preferredDate"
-          value={formData.preferredDate}
-          onChange={handleChange}
-          className="w-full px-4 py-3 bg-charcoal/40 backdrop-blur-sm border border-gold-500/30 rounded-lg text-ivory focus:border-gold-500 outline-none transition-colors"
+        <Calendar
+          selectedDate={formData.preferredDate}
+          onDateChange={(date) =>
+            setFormData((prev) => ({ ...prev, preferredDate: date }))
+          }
         />
         {errors.preferredDate && (
           <p className="text-red-400 text-xs mt-2">{errors.preferredDate}</p>
+        )}
+      </div>
+
+      {/* Preferred Time */}
+      <div>
+        <TimePicker
+          selectedTime={formData.preferredTime}
+          onTimeChange={(time) =>
+            setFormData((prev) => ({ ...prev, preferredTime: time }))
+          }
+        />
+        {errors.preferredTime && (
+          <p className="text-red-400 text-xs mt-2">{errors.preferredTime}</p>
         )}
       </div>
 

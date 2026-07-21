@@ -30,8 +30,8 @@ export function PaymentInstructions() {
   });
 
   const bankingDetails = {
-    bankName: "RBC Royal Bank (Trinidad & Tobago) Ltd",
-    accountNumber: "110000004629251",
+    bankName: "JMMB",
+    accountNumber: "007400029464",
     accountHolder: "Jeninne Belfast",
     accountType: "Savings Account",
   };
@@ -143,6 +143,68 @@ export function PaymentInstructions() {
           </p>
         </div>
       </section>
+
+      {/* Booking Summary Section */}
+      {booking.serviceName && (
+        <section className="py-16 md:py-24 px-6 md:px-12 bg-charcoal/50 border-y border-gold-500/20">
+          <div className="max-w-6xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: MOTION.normal }}
+              className="p-8 bg-charcoal/50 rounded-lg border border-gold-500/30"
+            >
+              <h2 className="font-serif text-2xl font-light text-ivory mb-6">
+                Order Summary
+              </h2>
+              <div className="space-y-4 pb-6 border-b border-gold-500/20">
+                <div className="flex justify-between font-sans">
+                  <span className="text-warmgray">Service</span>
+                  <span className="text-ivory font-medium">{booking.serviceName}</span>
+                </div>
+                {booking.packageTier && booking.packagePrice && (
+                  <div className="flex justify-between font-sans">
+                    <span className="text-warmgray">
+                      {booking.packageTier.charAt(0).toUpperCase() +
+                        booking.packageTier.slice(1)}{" "}
+                      Package
+                    </span>
+                    <span className="text-ivory font-medium">
+                      TT${booking.packagePrice.toLocaleString()}
+                    </span>
+                  </div>
+                )}
+                {booking.selectedAddOns.length > 0 && (
+                  <>
+                    {booking.selectedAddOns.map((addOn) => (
+                      <div
+                        key={addOn.id}
+                        className="flex justify-between font-sans text-sm"
+                      >
+                        <span className="text-warmgray">{addOn.name}</span>
+                        <span className="text-gold-300">
+                          +TT${addOn.price.toLocaleString()}
+                        </span>
+                      </div>
+                    ))}
+                  </>
+                )}
+              </div>
+              <div className="pt-6">
+                <div className="flex justify-between items-baseline">
+                  <span className="font-serif text-lg text-ivory">
+                    Total Amount Due
+                  </span>
+                  <span className="font-serif text-3xl text-gold-500">
+                    TT${booking.estimatedTotal.toLocaleString()}
+                  </span>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+      )}
 
       {/* Main Content */}
       <section className="py-24 md:py-32 px-6 md:px-12 bg-charcoal/30">
