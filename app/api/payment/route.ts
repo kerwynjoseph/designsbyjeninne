@@ -223,6 +223,15 @@ export async function POST(request: NextRequest) {
       html: adminNotificationHtml,
     });
 
+    console.log("Payment submission emails:", {
+      to: fullName,
+      email,
+      clientEmailSuccess: clientEmailResult.success,
+      clientEmailError: clientEmailResult.error,
+      adminEmailSuccess: adminEmailResult.success,
+      adminEmailError: adminEmailResult.error,
+    });
+
     return NextResponse.json(
       {
         success: true,

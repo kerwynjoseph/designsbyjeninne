@@ -73,6 +73,8 @@ export async function POST(request: NextRequest) {
       message,
       clientEmailSent: clientEmailResult.success,
       adminEmailSent: adminEmailResult.success,
+      clientEmailError: clientEmailResult.error,
+      adminEmailError: adminEmailResult.error,
     });
 
     return NextResponse.json(
