@@ -16,6 +16,7 @@ export async function POST(request: NextRequest) {
       projectType,
       budget,
       preferredDate,
+      preferredTime,
       message,
       serviceName,
       packageTier,
@@ -58,6 +59,7 @@ export async function POST(request: NextRequest) {
         estimatedTotal: estimatedTotal || 0,
         projectDetails: message,
         preferredDate,
+        preferredTime,
         preferredContact,
       }),
     });

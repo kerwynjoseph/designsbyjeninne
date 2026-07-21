@@ -154,6 +154,7 @@ export function generateAdminNotificationEmail(data: {
   estimatedTotal: number;
   projectDetails: string;
   preferredDate: string;
+  preferredTime?: string;
   preferredContact: string;
 }): string {
   return `
@@ -185,6 +186,11 @@ export function generateAdminNotificationEmail(data: {
             <div class="detail"><div class="detail-label">Phone</div><div class="detail-value">${data.clientPhone}</div></div>
             <div class="detail"><div class="detail-label">Preferred Contact</div><div class="detail-value">${data.preferredContact}</div></div>
             <div class="detail"><div class="detail-label">Preferred Date</div><div class="detail-value">${data.preferredDate}</div></div>
+            ${
+              data.preferredTime
+                ? `<div class="detail"><div class="detail-label">Preferred Time</div><div class="detail-value">${data.preferredTime}</div></div>`
+                : ""
+            }
           </div>
 
           <div class="section">

@@ -77,6 +77,27 @@ export function PaymentInstructions() {
         "selectedServices",
         formData.selectedServices.join(", ")
       );
+
+      // Add booking information
+      if (booking.serviceName) {
+        formDataToSend.append("serviceName", booking.serviceName);
+      }
+      if (booking.packageTier) {
+        formDataToSend.append("packageTier", booking.packageTier);
+      }
+      if (booking.packagePrice) {
+        formDataToSend.append("packagePrice", booking.packagePrice.toString());
+      }
+      if (booking.selectedAddOns.length > 0) {
+        formDataToSend.append(
+          "selectedAddOns",
+          JSON.stringify(booking.selectedAddOns)
+        );
+      }
+      if (booking.estimatedTotal) {
+        formDataToSend.append("estimatedTotal", booking.estimatedTotal.toString());
+      }
+
       if (uploadedFile) {
         formDataToSend.append("paymentProof", uploadedFile);
       }
