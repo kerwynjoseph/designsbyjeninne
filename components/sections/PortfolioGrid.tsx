@@ -6,6 +6,7 @@ import { PortfolioItem } from "@/types";
 import { getPlaceholder, getPlaceholderImageUrl } from "@/lib/placeholder";
 import { useState } from "react";
 import { PortfolioLightbox } from "./PortfolioLightbox";
+import { MOTION } from "@/lib/motion";
 
 interface PortfolioGridProps {
   items: PortfolioItem[];
@@ -18,7 +19,7 @@ export function PortfolioGrid({ items }: PortfolioGridProps) {
   return (
     <>
       {/* Masonry Grid */}
-      <div className="columns-1 md:columns-2 lg:columns-3 gap-8 lg:gap-10">
+      <div className="columns-1 md:columns-2 lg:columns-3 gap-6 md:gap-8 lg:gap-10">
         {items.map((item, idx) => {
           const placeholder = getPlaceholder(
             (item.imageKey as any) || "square"
@@ -123,7 +124,3 @@ export function PortfolioGrid({ items }: PortfolioGridProps) {
     </>
   );
 }
-
-const MOTION = {
-  normal: 0.4,
-};

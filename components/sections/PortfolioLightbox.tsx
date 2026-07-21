@@ -43,11 +43,11 @@ export function PortfolioLightbox({ item, onClose }: PortfolioLightboxProps) {
         {/* Close Button */}
         <motion.button
           onClick={onClose}
-          className="absolute top-6 right-6 text-ivory hover:text-gold-500 transition-colors z-50"
+          className="absolute top-4 right-4 md:top-6 md:right-6 text-ivory hover:text-gold-500 transition-colors z-50"
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
         >
-          <X className="w-8 h-8" />
+          <X className="w-6 h-6 md:w-8 md:h-8" />
         </motion.button>
 
         {/* Content */}
@@ -81,15 +81,15 @@ export function PortfolioLightbox({ item, onClose }: PortfolioLightboxProps) {
           </div>
 
           {/* Info */}
-          <div className="bg-charcoal/50 backdrop-blur-sm rounded-lg p-6 md:p-8">
-            <h2 className="font-serif text-4xl font-light text-ivory mb-2">
+          <div className="bg-charcoal/50 backdrop-blur-sm rounded-lg p-4 md:p-8">
+            <h2 className="font-serif text-2xl md:text-4xl font-light text-ivory mb-2">
               {item.title}
             </h2>
-            <p className="font-sans text-sm text-gold-500 uppercase tracking-wider mb-6">
+            <p className="font-sans text-xs md:text-sm text-gold-500 uppercase tracking-wider mb-4 md:mb-6">
               {item.category}
             </p>
             {item.description && (
-              <p className="font-sans text-warmgray leading-relaxed">
+              <p className="font-sans text-sm md:text-base text-warmgray leading-relaxed">
                 {item.description}
               </p>
             )}
