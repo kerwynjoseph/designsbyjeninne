@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const adminEmail = "info@designbyjeninne.com";
+    const adminEmail = "info@designsbyjeninne.com";
 
     const clientEmailResult = await sendEmail({
       to: email,
