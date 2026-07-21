@@ -6,7 +6,7 @@ interface SendEmailParams {
 }
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
-const FROM_EMAIL = "onboarding@resend.dev";
+const FROM_EMAIL = "info@designsbyjeninne.com";
 
 export async function sendEmail({
   to,
