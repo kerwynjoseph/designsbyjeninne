@@ -58,7 +58,7 @@ export function Nav() {
               alt="Designs by Jeninne"
               width={280}
               height={90}
-              className="h-24 w-auto"
+              className="h-16 md:h-24 w-auto"
               priority
             />
           </button>
