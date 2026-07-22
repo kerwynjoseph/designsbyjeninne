@@ -18,7 +18,7 @@ export function Hero() {
   };
 
   return (
-    <section className="relative min-h-screen w-full overflow-hidden bg-ink flex items-center justify-center px-6">
+    <section className="relative min-h-screen w-full overflow-hidden bg-ink flex items-center justify-center px-6 pt-28 md:pt-0">
       {/* Static background gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-charcoal via-ink to-ink" />
 
@@ -35,7 +35,7 @@ export function Hero() {
         </motion.div>
 
         {/* Main Headline */}
-        <h1 className="font-serif text-7xl md:text-8xl font-light leading-tight text-ivory mb-8 tracking-tight">
+        <h1 className="font-serif text-5xl sm:text-6xl md:text-8xl font-light leading-tight text-ivory mb-8 tracking-tight">
           <RevealText
             className="block"
             delay={0.3}

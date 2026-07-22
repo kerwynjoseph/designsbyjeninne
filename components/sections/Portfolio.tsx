@@ -155,7 +155,7 @@ export function Portfolio() {
               ) : (
                 <video
                   src={selectedVideo}
-                  className="w-full h-auto max-h-[70vh] object-contain rounded-lg"
+                  className="w-auto h-auto max-w-full max-h-[85vh] object-contain rounded-lg"
                   autoPlay
                   controls
                 />
