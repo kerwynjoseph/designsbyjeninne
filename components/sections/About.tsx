@@ -258,9 +258,9 @@ export function About() {
           transition={{ duration: MOTION.normal }}
           className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 pt-20 border-t border-gold-500/20"
         >
-          <AnimatedCounter end={100} label="Creative Services" />
-          <AnimatedCounter end={50} label="Branding Projects" />
-          <AnimatedCounter end={75} label="Content Campaigns" />
+          <AnimatedCounter end={10} label="Creative Services" />
+          <AnimatedCounter end={10} label="Branding Projects" />
+          <AnimatedCounter end={10} label="Content Campaigns" />
           <AnimatedCounter end={98} label="Client Satisfaction %" />
         </motion.div>
       </div>
