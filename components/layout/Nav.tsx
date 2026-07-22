@@ -46,8 +46,8 @@ export function Nav() {
   return (
     <>
       {/* Desktop Nav */}
-      <nav className="fixed top-0 left-0 right-0 z-[1000] bg-ink/95 backdrop-blur-sm border-b border-transparent">
-        <div className="max-w-7xl mx-auto px-6 md:px-12 py-0 flex items-center justify-between">
+      <nav className="fixed top-0 left-0 right-0 z-[1000] h-14 md:h-24 bg-ink/95 backdrop-blur-sm border-b border-transparent">
+        <div className="max-w-7xl mx-auto px-6 md:px-12 py-0 h-full flex items-center justify-between">
           {/* Logo */}
           <button
             onClick={() => handleNavClick("#")}
@@ -58,7 +58,7 @@ export function Nav() {
               alt="Designs by Jeninne"
               width={280}
               height={90}
-              className="h-16 md:h-24 w-auto"
+              className="h-20 md:h-24 w-auto"
               priority
             />
           </button>
@@ -92,7 +92,7 @@ export function Nav() {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 top-16 z-[999] bg-ink/95 backdrop-blur-md">
+        <div className="fixed inset-0 top-14 md:top-24 z-[999] bg-ink/95 backdrop-blur-md">
           <div className="flex flex-col items-center justify-start gap-8 pt-12 px-6">
             {navItems.map((item) => (
               <button

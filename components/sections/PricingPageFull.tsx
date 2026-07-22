@@ -28,7 +28,7 @@ export function PricingPageFull() {
   return (
     <main className="w-full bg-ink">
       {/* Hero Section */}
-      <section className="relative min-h-[50vh] flex items-center justify-center px-6 md:px-12 py-24 md:py-32">
+      <section className="relative min-h-[50vh] flex items-center justify-center px-6 md:px-12 pt-32 pb-24 md:py-32">
         <div className="max-w-4xl mx-auto text-center">
           <div className="text-xs font-sans font-medium tracking-[0.3em] text-gold-500 uppercase mb-6">
             Transparent Pricing
