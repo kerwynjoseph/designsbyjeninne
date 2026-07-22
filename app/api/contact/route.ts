@@ -40,8 +40,17 @@ export async function POST(request: NextRequest) {
       html: generateClientConfirmationEmail({
         name: fullName,
         email,
+        phone,
+        preferredContact,
+        projectType,
+        budget,
+        preferredDate,
+        preferredTime,
+        message,
         serviceName: serviceName || projectType || "Custom Project",
         packageTier: packageTier,
+        packagePrice,
+        addOns: selectedAddOns || [],
         estimatedTotal: estimatedTotal || 0,
       }),
     });
@@ -49,18 +58,22 @@ export async function POST(request: NextRequest) {
     const adminEmailResult = await sendEmail({
       to: adminEmail,
       subject: `New Booking: ${serviceName || projectType || "Custom Project"} - ${fullName}`,
+      replyTo: email,
       html: generateAdminNotificationEmail({
         clientName: fullName,
         clientEmail: email,
         clientPhone: phone,
+        preferredContact,
+        projectType,
+        budget,
         serviceName: serviceName || projectType || "Custom Project",
         packageTier: packageTier,
+        packagePrice,
         addOns: selectedAddOns || [],
         estimatedTotal: estimatedTotal || 0,
         projectDetails: message,
         preferredDate,
         preferredTime,
-        preferredContact,
       }),
     });
 
