@@ -3,9 +3,12 @@
 interface TimePickerProps {
   selectedTime: string;
   onTimeChange: (time: string) => void;
+  allowCustom?: boolean;
 }
 
-export function TimePicker({ selectedTime, onTimeChange }: TimePickerProps) {
+export const CUSTOM_TIME_VALUE = "custom";
+
+export function TimePicker({ selectedTime, onTimeChange, allowCustom = false }: TimePickerProps) {
   const generateTimeSlots = () => {
     const slots = [];
     const startHour = 9;
@@ -54,8 +57,23 @@ export function TimePicker({ selectedTime, onTimeChange }: TimePickerProps) {
             {formatTimeDisplay(time)}
           </button>
         ))}
+        {allowCustom && (
+          <button
+            onClick={() => onTimeChange(CUSTOM_TIME_VALUE)}
+            className={`
+              py-2 px-3 rounded-lg font-sans text-sm font-medium transition-all
+              ${
+                selectedTime === CUSTOM_TIME_VALUE
+                  ? "bg-gold-500 text-ink"
+                  : "bg-charcoal/40 border border-gold-500/30 text-ivory hover:border-gold-500 cursor-pointer"
+              }
+            `}
+          >
+            Custom Time
+          </button>
+        )}
       </div>
-      {selectedTime && (
+      {selectedTime && selectedTime !== CUSTOM_TIME_VALUE && (
         <p className="font-sans text-xs text-warmgray/70 mt-3">
           Selected: <span className="text-gold-300">{formatTimeDisplay(selectedTime)}</span>
         </p>

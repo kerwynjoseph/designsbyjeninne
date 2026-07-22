@@ -12,9 +12,7 @@ export default function PaymentPage() {
   return (
     <>
       <Nav />
-      <main className="w-full bg-ink">
-        <PaymentInstructions />
-      </main>
+      <PaymentInstructions />
       <Footer />
     </>
   );

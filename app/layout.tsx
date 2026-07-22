@@ -23,6 +23,14 @@ export const metadata: Metadata = {
   title: "Designs by Jeninne | Luxury Creative Studio",
   description:
     "Premium creative design studio specializing in luxury branding, graphic design, videography, and social media management.",
+  manifest: "/site.webmanifest",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "32x32" },
+      { url: "/icon.png", type: "image/png" },
+    ],
+    apple: "/apple-icon.png",
+  },
   openGraph: {
     title: "Designs by Jeninne | Luxury Creative Studio",
     description:

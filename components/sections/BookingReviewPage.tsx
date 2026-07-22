@@ -5,15 +5,31 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { MOTION } from "@/lib/motion";
 import { pricingSections } from "@/lib/data/pricing";
-import { Check } from "lucide-react";
+import { SCHEDULING_EXEMPT_SERVICE_IDS } from "@/lib/data/location-config";
+import { Check, X } from "lucide-react";
 import { useState } from "react";
+import { Calendar } from "@/components/shared/Calendar";
+import { TimePicker, CUSTOM_TIME_VALUE } from "@/components/shared/TimePicker";
+import { LocationAutocomplete, SelectedLocation } from "@/components/shared/LocationAutocomplete";
 
 export function BookingReviewPage() {
-  const { booking, toggleAddOn } = useBooking();
+  const {
+    booking,
+    toggleAddOn,
+    setSchedule,
+    setPrimaryLocation,
+    setHasMultipleLocations,
+    addAdditionalLocation,
+    removeAdditionalLocation,
+    setProjectDetails,
+    setClientNotes,
+  } = useBooking();
   const router = useRouter();
   const [selectedAddOns, setSelectedAddOns] = useState<Set<string>>(
     new Set(booking.selectedAddOns.map((ao) => ao.id))
   );
+  const [newLocation, setNewLocation] = useState<SelectedLocation | null>(null);
+  const [formError, setFormError] = useState("");
 
   if (!booking.serviceName) {
     return (
@@ -35,8 +51,9 @@ export function BookingReviewPage() {
 
   const service = pricingSections.find((s) => s.id === booking.serviceId);
   const currentPackage = service?.packages.find(
-    (p: any) => p.tier === booking.packageTier
+    (p) => p.tier === booking.packageTier
   );
+  const requiresScheduling = !SCHEDULING_EXEMPT_SERVICE_IDS.includes(booking.serviceId);
 
   const handleAddOnToggle = (addOnId: string, addOnName: string, addOnPrice: number) => {
     const newSet = new Set(selectedAddOns);
@@ -49,7 +66,32 @@ export function BookingReviewPage() {
     toggleAddOn(addOnId, addOnName, addOnPrice);
   };
 
+  const handleAddLocation = () => {
+    if (!newLocation || newLocation.lat == null) return;
+    addAdditionalLocation(newLocation);
+    setNewLocation(null);
+  };
+
   const handleContinueToPayment = () => {
+    if (requiresScheduling) {
+      if (!booking.preferredDate) {
+        setFormError("Please select a project date.");
+        return;
+      }
+      if (!booking.preferredTime) {
+        setFormError("Please select a project time.");
+        return;
+      }
+      if (booking.isCustomTime && !booking.customTimeNote.trim()) {
+        setFormError("Please describe your requested custom time.");
+        return;
+      }
+      if (!booking.primaryLocation) {
+        setFormError("Please select a primary location.");
+        return;
+      }
+    }
+    setFormError("");
     router.push("/payment");
   };
 
@@ -144,6 +186,211 @@ export function BookingReviewPage() {
                 </div>
               </motion.div>
             )}
+
+            {/* Project Details */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: MOTION.normal, delay: 0.15 }}
+              className="p-8 bg-charcoal/50 rounded-lg border border-gold-500/30"
+            >
+              <h2 className="font-serif text-2xl font-light text-ivory mb-6">
+                Project Details
+              </h2>
+              <textarea
+                value={booking.projectDetails}
+                onChange={(e) => setProjectDetails(e.target.value)}
+                rows={5}
+                placeholder="Tell us about your project, vision, and any specific requirements..."
+                className="w-full px-4 py-3 bg-charcoal/40 backdrop-blur-sm border border-gold-500/30 rounded-lg text-ivory placeholder-warmgray focus:border-gold-500 outline-none transition-colors resize-none"
+              />
+            </motion.div>
+
+            {/* Schedule */}
+            {requiresScheduling && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: MOTION.normal, delay: 0.2 }}
+                className="p-8 bg-charcoal/50 rounded-lg border border-gold-500/30 space-y-8"
+              >
+                <div>
+                  <h2 className="font-serif text-2xl font-light text-ivory mb-6">
+                    Project Date
+                  </h2>
+                  <Calendar
+                    selectedDate={booking.preferredDate}
+                    onDateChange={(date) =>
+                      setSchedule(date, booking.preferredTime, booking.isCustomTime, booking.customTimeNote)
+                    }
+                  />
+                </div>
+
+                <div>
+                  <TimePicker
+                    selectedTime={booking.preferredTime}
+                    onTimeChange={(time) =>
+                      setSchedule(
+                        booking.preferredDate,
+                        time,
+                        time === CUSTOM_TIME_VALUE,
+                        booking.customTimeNote
+                      )
+                    }
+                    allowCustom
+                  />
+                  {booking.preferredTime === CUSTOM_TIME_VALUE && (
+                    <div className="mt-4">
+                      <label className="block font-sans text-sm font-medium text-ivory mb-3">
+                        Requested Custom Time
+                      </label>
+                      <input
+                        type="text"
+                        value={booking.customTimeNote}
+                        onChange={(e) =>
+                          setSchedule(
+                            booking.preferredDate,
+                            booking.preferredTime,
+                            true,
+                            e.target.value
+                          )
+                        }
+                        placeholder="e.g. 7:00 PM"
+                        className="w-full px-4 py-3 bg-charcoal/40 backdrop-blur-sm border border-gold-500/30 rounded-lg text-ivory placeholder-warmgray focus:border-gold-500 outline-none transition-colors"
+                      />
+                      <p className="font-sans text-xs text-warmgray/70 mt-2">
+                        Times outside 9:00 AM–6:00 PM are subject to approval. We&apos;ll confirm availability with you directly.
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </motion.div>
+            )}
+
+            {/* Location */}
+            {requiresScheduling && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: MOTION.normal, delay: 0.25 }}
+                className="p-8 bg-charcoal/50 rounded-lg border border-gold-500/30 space-y-8"
+              >
+                <div>
+                  <h2 className="font-serif text-2xl font-light text-ivory mb-2">
+                    Location
+                  </h2>
+                  <p className="font-sans text-xs text-warmgray/70 mb-6">
+                    Locations outside Central Trinidad incur a travel fee, shown automatically once selected.
+                  </p>
+                  <LocationAutocomplete
+                    label="Primary Location"
+                    value={booking.primaryLocation}
+                    onChange={setPrimaryLocation}
+                  />
+                  {booking.primaryLocation && booking.primaryTravelFee > 0 && (
+                    <p className="font-sans text-xs text-gold-300 mt-2">
+                      Travel fee applies: +TT${booking.primaryTravelFee.toLocaleString()}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <p className="block font-sans text-sm font-medium text-ivory mb-3">
+                    Will this project require multiple locations?
+                  </p>
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => setHasMultipleLocations(false)}
+                      className={`px-6 py-2 rounded-lg font-sans text-sm font-medium border transition-all ${
+                        !booking.hasMultipleLocations
+                          ? "bg-gold-500 text-ink border-gold-500"
+                          : "bg-charcoal/40 text-warmgray border-gold-500/30 hover:border-gold-500/50"
+                      }`}
+                    >
+                      No
+                    </button>
+                    <button
+                      onClick={() => setHasMultipleLocations(true)}
+                      className={`px-6 py-2 rounded-lg font-sans text-sm font-medium border transition-all ${
+                        booking.hasMultipleLocations
+                          ? "bg-gold-500 text-ink border-gold-500"
+                          : "bg-charcoal/40 text-warmgray border-gold-500/30 hover:border-gold-500/50"
+                      }`}
+                    >
+                      Yes
+                    </button>
+                  </div>
+                </div>
+
+                {booking.hasMultipleLocations && (
+                  <div className="space-y-4">
+                    {booking.additionalLocations.map((loc, idx) => (
+                      <div
+                        key={loc.id}
+                        className="p-4 bg-charcoal/40 border border-gold-500/20 rounded-lg flex items-start justify-between gap-3"
+                      >
+                        <div>
+                          <p className="font-sans text-xs text-gold-500 uppercase tracking-wider mb-1">
+                            Additional Location {idx + 1}
+                          </p>
+                          <p className="font-sans text-sm text-ivory">{loc.address}</p>
+                          <p className="font-sans text-xs text-warmgray mt-1">
+                            +TT${loc.fee.toLocaleString()} location fee
+                            {loc.travelFee > 0 && ` · +TT$${loc.travelFee.toLocaleString()} travel fee`}
+                          </p>
+                        </div>
+                        <button
+                          onClick={() => removeAdditionalLocation(loc.id)}
+                          className="text-warmgray hover:text-red-400 transition-colors flex-shrink-0"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
+
+                    <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-end">
+                      <div className="flex-1 w-full">
+                        <LocationAutocomplete
+                          label="Add Another Location"
+                          value={newLocation}
+                          onChange={setNewLocation}
+                        />
+                      </div>
+                      <button
+                        onClick={handleAddLocation}
+                        disabled={!newLocation || newLocation.lat == null}
+                        className="px-6 py-3 bg-gold-500/20 border border-gold-500 text-gold-300 rounded-lg font-sans text-sm font-medium hover:bg-gold-500/30 transition-colors disabled:opacity-40 disabled:cursor-not-allowed whitespace-nowrap"
+                      >
+                        Add Location
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </motion.div>
+            )}
+
+            {/* Client Notes */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: MOTION.normal, delay: 0.3 }}
+              className="p-8 bg-charcoal/50 rounded-lg border border-gold-500/30"
+            >
+              <h2 className="font-serif text-2xl font-light text-ivory mb-6">
+                Additional Notes
+              </h2>
+              <textarea
+                value={booking.clientNotes}
+                onChange={(e) => setClientNotes(e.target.value)}
+                rows={3}
+                placeholder="Anything else we should know? (optional)"
+                className="w-full px-4 py-3 bg-charcoal/40 backdrop-blur-sm border border-gold-500/30 rounded-lg text-ivory placeholder-warmgray focus:border-gold-500 outline-none transition-colors resize-none"
+              />
+            </motion.div>
           </div>
 
           {/* Right: Summary & CTA */}
@@ -154,9 +401,14 @@ export function BookingReviewPage() {
             transition={{ duration: MOTION.normal, delay: 0.2 }}
             className="sticky top-24 p-8 bg-charcoal/50 rounded-lg border border-gold-500/30 h-fit"
           >
-            <h3 className="font-serif text-2xl font-light text-ivory mb-6">
+            <h3 className="font-serif text-2xl font-light text-ivory mb-2">
               Order Summary
             </h3>
+            {booking.bookingReference && (
+              <p className="font-sans text-xs text-warmgray/60 mb-6">
+                Ref: {booking.bookingReference}
+              </p>
+            )}
 
             <div className="space-y-4 pb-6 border-b border-gold-500/20">
               {booking.packageTier && booking.packagePrice && (
@@ -172,21 +424,35 @@ export function BookingReviewPage() {
                 </div>
               )}
 
-              {booking.selectedAddOns.length > 0 && (
-                <>
-                  {booking.selectedAddOns.map((addOn) => (
-                    <div
-                      key={addOn.id}
-                      className="flex justify-between font-sans text-sm"
-                    >
-                      <span className="text-warmgray">{addOn.name}</span>
-                      <span className="text-gold-300">
-                        +TT${addOn.price.toLocaleString()}
-                      </span>
-                    </div>
-                  ))}
-                </>
+              {booking.selectedAddOns.map((addOn) => (
+                <div key={addOn.id} className="flex justify-between font-sans text-sm">
+                  <span className="text-warmgray">{addOn.name}</span>
+                  <span className="text-gold-300">
+                    +TT${addOn.price.toLocaleString()}
+                  </span>
+                </div>
+              ))}
+
+              {booking.primaryTravelFee > 0 && (
+                <div className="flex justify-between font-sans text-sm">
+                  <span className="text-warmgray">Travel Fee</span>
+                  <span className="text-gold-300">
+                    +TT${booking.primaryTravelFee.toLocaleString()}
+                  </span>
+                </div>
               )}
+
+              {booking.additionalLocations.map((loc, idx) => (
+                <div key={loc.id} className="flex justify-between font-sans text-sm">
+                  <span className="text-warmgray">
+                    Additional Location {idx + 1}
+                    {loc.travelFee > 0 ? " + Travel" : ""}
+                  </span>
+                  <span className="text-gold-300">
+                    +TT${(loc.fee + loc.travelFee).toLocaleString()}
+                  </span>
+                </div>
+              ))}
             </div>
 
             <div className="pt-6 mb-8">
@@ -202,6 +468,10 @@ export function BookingReviewPage() {
                 Payment options available after checkout
               </p>
             </div>
+
+            {formError && (
+              <p className="text-red-400 text-xs mb-4 text-center">{formError}</p>
+            )}
 
             <button
               onClick={handleContinueToPayment}

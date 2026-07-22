@@ -122,3 +122,31 @@
 html {
   overflow-y: scroll;
 }
+
+/* Google Places autocomplete dropdown - brand theming */
+.pac-container {
+  background-color: #101010 !important;
+  border: 1px solid rgba(247, 201, 72, 0.3) !important;
+  border-radius: 0.5rem !important;
+  margin-top: 4px;
+  font-family: var(--font-sans);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+}
+.pac-item {
+  color: #b8b2a6 !important;
+  border-top: 1px solid rgba(247, 201, 72, 0.1) !important;
+  padding: 10px 12px;
+}
+.pac-item:hover,
+.pac-item-selected {
+  background-color: rgba(247, 201, 72, 0.1) !important;
+}
+.pac-item-query {
+  color: #f5f1e8 !important;
+}
+.pac-matched {
+  color: #f7c948 !important;
+}
+.pac-icon {
+  filter: invert(76%) sepia(45%) saturate(469%) hue-rotate(358deg) brightness(101%) contrast(96%);
+}

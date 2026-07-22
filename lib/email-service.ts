@@ -375,21 +375,103 @@ export function generateAdminNotificationEmail(data: AdminNotificationData): str
 }
 
 /* ------------------------------------------------------------------ */
-/* Payment form emails                                                */
+/* Payment / booking emails                                           */
 /* ------------------------------------------------------------------ */
 
-interface PaymentEmailData {
+export interface BookingLocationData {
+  address: string;
+  lat: number | null;
+  lng: number | null;
+  placeId: string | null;
+}
+
+export interface AdditionalLocationData extends BookingLocationData {
+  id: string;
+  fee: number;
+  travelFee: number;
+}
+
+export interface PaymentEmailData {
   fullName: string;
   email: string;
   phone: string;
-  projectDetails?: string;
-  selectedServices?: string;
+  paymentMethod?: string;
+  bookingReference?: string;
+
   serviceName?: string;
   packageTier?: string;
   packagePrice?: number;
   addOns?: Array<{ name: string; price: number }>;
+
+  projectDetails?: string;
+  clientNotes?: string;
+
+  preferredDate?: string;
+  preferredTime?: string;
+  isCustomTime?: boolean;
+  customTimeNote?: string;
+
+  primaryLocation?: BookingLocationData | null;
+  primaryTravelFee?: number;
+  additionalLocations?: AdditionalLocationData[];
+
   estimatedTotal?: number;
   paymentProofFilename?: string;
+
+  // Legacy fields kept for backward compatibility with older submissions
+  selectedServices?: string;
+}
+
+function formatScheduledTime(data: PaymentEmailData): string | undefined {
+  if (data.isCustomTime) {
+    return data.customTimeNote
+      ? `${data.customTimeNote} (custom - pending approval)`
+      : undefined;
+  }
+  return formatTime(data.preferredTime);
+}
+
+function locationRows(data: PaymentEmailData): Array<[string, string | undefined]> {
+  const rows: Array<[string, string | undefined]> = [
+    ["Primary Location", data.primaryLocation?.address],
+    [
+      "Primary Location Travel Fee",
+      data.primaryTravelFee ? `TT$${data.primaryTravelFee.toLocaleString()}` : undefined,
+    ],
+  ];
+
+  (data.additionalLocations || []).forEach((loc, idx) => {
+    rows.push([`Additional Location ${idx + 1}`, loc.address]);
+    rows.push([
+      `Additional Location ${idx + 1} Fee`,
+      `TT$${loc.fee.toLocaleString()}${loc.travelFee ? ` + TT$${loc.travelFee.toLocaleString()} travel` : ""}`,
+    ]);
+  });
+
+  return rows;
+}
+
+function pricingBreakdownHtml(data: PaymentEmailData): string {
+  const rows: Array<[string, string | undefined]> = [
+    ["Base Package", data.packagePrice ? `TT$${data.packagePrice.toLocaleString()}` : undefined],
+    ["Add-Ons", formatAddOns(data.addOns)],
+    [
+      "Primary Location Travel Fee",
+      data.primaryTravelFee ? `TT$${data.primaryTravelFee.toLocaleString()}` : undefined,
+    ],
+  ];
+
+  (data.additionalLocations || []).forEach((loc, idx) => {
+    rows.push([
+      `Additional Location ${idx + 1} Fee`,
+      `TT$${loc.fee.toLocaleString()}`,
+    ]);
+    if (loc.travelFee) {
+      rows.push([`Additional Location ${idx + 1} Travel Fee`, `TT$${loc.travelFee.toLocaleString()}`]);
+    }
+  });
+
+  return detailTable(rows);
 }
 
 export function generatePaymentClientReceiptEmail(data: PaymentEmailData): string {
@@ -397,7 +479,13 @@ export function generatePaymentClientReceiptEmail(data: PaymentEmailData): strin
 
   const body = `
     <p>Dear ${data.fullName},</p>
-    <p>Thank you for submitting your payment information! We've received your submission and will verify your payment within 24 hours.</p>
+    <p>Thank you for submitting your payment! We've received your booking and will verify your payment within 24 hours.</p>
+
+    ${
+      data.bookingReference
+        ? `<p style="color:#B8B2A6; font-size:12px; text-align:center;">Booking Reference: <strong style="color:#F7C948;">${data.bookingReference}</strong></p>`
+        : ""
+    }
 
     ${section(
       "Your Information",
@@ -405,6 +493,7 @@ export function generatePaymentClientReceiptEmail(data: PaymentEmailData): strin
         ["Full Name", data.fullName],
         ["Email", data.email],
         ["Phone", data.phone],
+        ["Payment Method", data.paymentMethod],
       ])
     )}
 
@@ -415,16 +504,22 @@ export function generatePaymentClientReceiptEmail(data: PaymentEmailData): strin
             detailTable([
               ["Service", data.serviceName],
               ["Package", data.packageTier],
-              ["Package Price", data.packagePrice ? `TT$${data.packagePrice.toLocaleString()}` : undefined],
-              ["Add-Ons", formatAddOns(data.addOns)],
             ])
           )
         : ""
     }
 
-    ${section("Services Selected", data.selectedServices ? `<div class="message-box">${data.selectedServices}</div>` : "")}
+    ${section(
+      "Schedule",
+      detailTable([
+        ["Date", formatDate(data.preferredDate)],
+        ["Time", formatScheduledTime(data)],
+      ])
+    )}
 
-    ${section("Project Details", data.projectDetails ? `<div class="message-box">${data.projectDetails}</div>` : "")}
+    ${section("Location", detailTable(locationRows(data)))}
+
+    ${section("Pricing Breakdown", pricingBreakdownHtml(data))}
 
     ${
       data.estimatedTotal
@@ -432,9 +527,13 @@ export function generatePaymentClientReceiptEmail(data: PaymentEmailData): strin
         : ""
     }
 
+    ${section("Project Details", data.projectDetails ? `<div class="message-box">${data.projectDetails}</div>` : "")}
+
+    ${section("Notes", data.clientNotes ? `<div class="message-box">${data.clientNotes}</div>` : "")}
+
     ${
       data.paymentProofFilename
-        ? `<div class="note-box"><p>&#128206; Your uploaded payment proof (<strong>${data.paymentProofFilename}</strong>) is attached to this email for your records.</p></div>`
+        ? `<div class="note-box"><p>&#128206; Your uploaded payment receipt (<strong>${data.paymentProofFilename}</strong>) is attached to this email for your records.</p></div>`
         : ""
     }
 
@@ -460,12 +559,19 @@ export function generatePaymentAdminNotificationEmail(data: PaymentEmailData): s
   const body = `
     <p style="color:#B8B2A6; font-size:12px; text-align:center; margin-top:-10px;">Submitted ${timestampNow()}</p>
 
+    ${
+      data.bookingReference
+        ? `<p style="color:#B8B2A6; font-size:12px; text-align:center;">Booking Reference: <strong style="color:#F7C948;">${data.bookingReference}</strong></p>`
+        : ""
+    }
+
     ${section(
       "Client Information",
       detailTable([
         ["Name", data.fullName],
         ["Email", data.email],
         ["Phone", data.phone],
+        ["Payment Method", data.paymentMethod],
       ])
     )}
 
@@ -476,26 +582,41 @@ export function generatePaymentAdminNotificationEmail(data: PaymentEmailData): s
             detailTable([
               ["Service", data.serviceName],
               ["Package", data.packageTier],
-              ["Package Price", data.packagePrice ? `TT$${data.packagePrice.toLocaleString()}` : undefined],
-              ["Add-Ons", formatAddOns(data.addOns)],
-              ["Total Amount", data.estimatedTotal ? `TT$${data.estimatedTotal.toLocaleString()}` : undefined],
             ])
           )
         : ""
     }
 
-    ${section("Services Selected", data.selectedServices ? `<div class="message-box">${data.selectedServices}</div>` : "")}
+    ${section(
+      "Schedule",
+      detailTable([
+        ["Date", formatDate(data.preferredDate)],
+        ["Time", formatScheduledTime(data)],
+      ])
+    )}
+
+    ${section("Location", detailTable(locationRows(data)))}
+
+    ${section("Pricing Breakdown", pricingBreakdownHtml(data))}
+
+    ${
+      data.estimatedTotal
+        ? `<div class="total-box">Final Total: TT$${data.estimatedTotal.toLocaleString()}</div>`
+        : ""
+    }
 
     ${section("Project Details", data.projectDetails ? `<div class="message-box">${data.projectDetails}</div>` : "")}
 
+    ${section("Client Notes", data.clientNotes ? `<div class="message-box">${data.clientNotes}</div>` : "")}
+
     ${section(
-      "Payment Proof",
+      "Payment Receipt",
       detailTable([
         ["File Submitted", data.paymentProofFilename || "No file uploaded"],
       ])
     )}
 
-    <div class="action-box">&#10003; Action Required: Review the attached payment proof and confirm booking with client</div>
+    <div class="action-box">&#10003; Action Required: Review the attached payment receipt and confirm booking with client</div>
 
     <div class="note-box">
       <p>Once payment is verified, send project details and timeline to the client. Reply directly to this email to reach them.</p>
