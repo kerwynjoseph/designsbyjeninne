@@ -101,9 +101,9 @@ export async function POST(request: NextRequest) {
       isCustomTime,
       customTimeNote,
       primaryLocation,
-      primaryTravelFee: primaryTravelFee ? parseInt(primaryTravelFee, 10) : 0,
+      primaryTravelFee: primaryTravelFee ? parseFloat(primaryTravelFee) : 0,
       additionalLocations,
-      estimatedTotal: estimatedTotal ? parseInt(estimatedTotal, 10) : undefined,
+      estimatedTotal: estimatedTotal ? parseFloat(estimatedTotal) : undefined,
       paymentProofFilename: paymentProof?.name,
     };
 

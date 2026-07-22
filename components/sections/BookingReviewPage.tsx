@@ -443,14 +443,17 @@ export function BookingReviewPage() {
               )}
 
               {booking.additionalLocations.map((loc, idx) => (
-                <div key={loc.id} className="flex justify-between font-sans text-sm">
-                  <span className="text-warmgray">
-                    Additional Location {idx + 1}
-                    {loc.travelFee > 0 ? " + Travel" : ""}
-                  </span>
-                  <span className="text-gold-300">
-                    +TT${(loc.fee + loc.travelFee).toLocaleString()}
-                  </span>
+                <div key={loc.id} className="contents">
+                  <div className="flex justify-between font-sans text-sm">
+                    <span className="text-warmgray">Additional Location {idx + 1}</span>
+                    <span className="text-gold-300">+TT${loc.fee.toLocaleString()}</span>
+                  </div>
+                  {loc.travelFee > 0 && (
+                    <div className="flex justify-between font-sans text-sm">
+                      <span className="text-warmgray">Travel Fee (Location {idx + 1})</span>
+                      <span className="text-gold-300">+TT${loc.travelFee.toLocaleString()}</span>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>

@@ -442,10 +442,10 @@ function locationRows(data: PaymentEmailData): Array<[string, string | undefined
 
   (data.additionalLocations || []).forEach((loc, idx) => {
     rows.push([`Additional Location ${idx + 1}`, loc.address]);
-    rows.push([
-      `Additional Location ${idx + 1} Fee`,
-      `TT$${loc.fee.toLocaleString()}${loc.travelFee ? ` + TT$${loc.travelFee.toLocaleString()} travel` : ""}`,
-    ]);
+    rows.push([`Additional Location ${idx + 1} Fee`, `TT$${loc.fee.toLocaleString()}`]);
+    if (loc.travelFee) {
+      rows.push([`Travel Fee (Location ${idx + 1})`, `TT$${loc.travelFee.toLocaleString()}`]);
+    }
   });
 
   return rows;
@@ -467,7 +467,7 @@ function pricingBreakdownHtml(data: PaymentEmailData): string {
       `TT$${loc.fee.toLocaleString()}`,
     ]);
     if (loc.travelFee) {
-      rows.push([`Additional Location ${idx + 1} Travel Fee`, `TT$${loc.travelFee.toLocaleString()}`]);
+      rows.push([`Travel Fee (Location ${idx + 1})`, `TT$${loc.travelFee.toLocaleString()}`]);
     }
   });
 
