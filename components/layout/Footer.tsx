@@ -45,7 +45,7 @@ export function Footer() {
               {["Services", "Portfolio", "About", "Contact"].map((link) => (
                 <li key={link}>
                   <a
-                    href={`#${link.toLowerCase()}`}
+                    href={`/${link.toLowerCase()}`}
                     className="text-warmgray hover:text-gold-500 transition-colors"
                   >
                     {link}
@@ -68,11 +68,11 @@ export function Footer() {
             <ul className="space-y-3 font-sans text-sm">
               <li>
                 <a
-                  href="mailto:info@designbyjeninne.com"
+                  href="mailto:info@designsbyjeninne.com"
                   className="text-warmgray hover:text-gold-500 transition-colors flex items-center gap-2"
                 >
                   <Mail className="w-4 h-4" />
-                  info@designbyjeninne.com
+                  info@designsbyjeninne.com
                 </a>
               </li>
               <li>
@@ -120,7 +120,7 @@ export function Footer() {
           viewport={{ once: true }}
           transition={{ duration: MOTION.normal }}
         >
-          © 2026 Designs by Jeninne. All rights reserved. |{" "}
+          © {currentYear} Designs by Jeninne. All rights reserved. |{" "}
           <a
             href="https://hopp.bio/kerwynjphotography"
             target="_blank"
