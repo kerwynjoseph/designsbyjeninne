@@ -27,6 +27,7 @@ export const metadata: Metadata = {
   description:
     "Premium creative design studio specializing in luxury branding, graphic design, videography, and social media management.",
   alternates: { canonical: "/" },
+  verification: { google: "H0nX-fIzBIAIc99e_1gE-VBleqy5xNXboWLFsugPpSM" },
   manifest: "/site.webmanifest",
   icons: {
     icon: [
