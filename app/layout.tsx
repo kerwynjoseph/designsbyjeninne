@@ -4,6 +4,7 @@ import "./globals.css";
 import { SmoothScrollProvider } from "@/lib/lenis";
 import { LoadingScreen } from "@/components/shared/LoadingScreen";
 import { BookingProvider } from "@/lib/booking-context";
+import { Analytics } from "@vercel/analytics/next";
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
@@ -20,6 +21,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.designsbyjeninne.com"),
   title: "Designs by Jeninne | Luxury Creative Studio",
   description:
     "Premium creative design studio specializing in luxury branding, graphic design, videography, and social media management.",
@@ -70,6 +72,7 @@ export default function RootLayout({
             </div>
           </SmoothScrollProvider>
         </BookingProvider>
+        <Analytics />
       </body>
     </html>
   );

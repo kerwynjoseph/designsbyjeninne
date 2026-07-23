@@ -66,9 +66,14 @@ export default function ContactPage() {
                       Phone / WhatsApp
                     </h3>
                   </div>
-                  <p className="font-sans text-warmgray leading-relaxed">
+                  <a
+                    href="https://wa.me/18683445101"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-sans text-warmgray leading-relaxed hover:text-gold-500 transition-colors"
+                  >
                     +1 (868) 344-5101
-                  </p>
+                  </a>
                   <p className="font-sans text-xs text-warmgray/60 mt-2">
                     Available for inquiries and consultations
                   </p>

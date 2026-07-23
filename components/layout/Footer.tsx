@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Mail, Phone } from "lucide-react";
+import { Mail, Phone, MessageCircle } from "lucide-react";
 import Image from "next/image";
 import { MOTION } from "@/lib/motion";
 
@@ -84,6 +84,17 @@ export function Footer() {
                   +1 (868) 344-5101
                 </a>
               </li>
+              <li>
+                <a
+                  href="https://wa.me/18683445101"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-warmgray hover:text-gold-500 transition-colors flex items-center gap-2"
+                >
+                  <MessageCircle className="w-4 h-4" />
+                  WhatsApp Us
+                </a>
+              </li>
             </ul>
           </motion.div>
 
@@ -121,6 +132,10 @@ export function Footer() {
           transition={{ duration: MOTION.normal }}
         >
           © {currentYear} Designs by Jeninne. All rights reserved. |{" "}
+          <a href="/privacy" className="text-gold-500 hover:text-gold-300 transition-colors">
+            Privacy Policy
+          </a>{" "}
+          |{" "}
           <a
             href="https://hopp.bio/kerwynjphotography"
             target="_blank"
