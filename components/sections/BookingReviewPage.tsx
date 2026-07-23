@@ -338,8 +338,9 @@ export function BookingReviewPage() {
                           </p>
                           <p className="font-sans text-sm text-ivory">{loc.address}</p>
                           <p className="font-sans text-xs text-warmgray mt-1">
-                            +TT${loc.fee.toLocaleString()} location fee
-                            {loc.travelFee > 0 && ` · +TT$${loc.travelFee.toLocaleString()} travel fee`}
+                            {loc.travelFee > 0
+                              ? `+TT$${loc.travelFee.toLocaleString()} travel fee`
+                              : "No travel fee"}
                           </p>
                         </div>
                         <button
@@ -442,20 +443,15 @@ export function BookingReviewPage() {
                 </div>
               )}
 
-              {booking.additionalLocations.map((loc, idx) => (
-                <div key={loc.id} className="contents">
-                  <div className="flex justify-between font-sans text-sm">
-                    <span className="text-warmgray">Additional Location {idx + 1}</span>
-                    <span className="text-gold-300">+TT${loc.fee.toLocaleString()}</span>
-                  </div>
-                  {loc.travelFee > 0 && (
-                    <div className="flex justify-between font-sans text-sm">
+              {booking.additionalLocations.map(
+                (loc, idx) =>
+                  loc.travelFee > 0 && (
+                    <div key={loc.id} className="flex justify-between font-sans text-sm">
                       <span className="text-warmgray">Travel Fee (Location {idx + 1})</span>
                       <span className="text-gold-300">+TT${loc.travelFee.toLocaleString()}</span>
                     </div>
-                  )}
-                </div>
-              ))}
+                  )
+              )}
             </div>
 
             <div className="pt-6 mb-8">

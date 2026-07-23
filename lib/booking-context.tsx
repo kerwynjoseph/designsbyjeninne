@@ -1,7 +1,10 @@
 "use client";
 
 import React, { createContext, useContext, useState } from "react";
-import { calculateTravelFee, ADDITIONAL_LOCATION_FEE } from "@/lib/data/location-config";
+import {
+  calculateTravelFee,
+  calculateSequentialTravelFee,
+} from "@/lib/data/location-config";
 import { generateBookingReference } from "@/lib/utils/booking-reference";
 
 export interface BookingLocation {
@@ -13,7 +16,6 @@ export interface BookingLocation {
 
 export interface AdditionalLocation extends BookingLocation {
   id: string;
-  fee: number;
   travelFee: number;
 }
 
@@ -90,7 +92,7 @@ const BookingContext = createContext<BookingContextType | undefined>(undefined);
 function computeTotal(b: BookingSelection): number {
   const addOnTotal = b.selectedAddOns.reduce((sum, ao) => sum + ao.price, 0);
   const additionalLocationsTotal = b.additionalLocations.reduce(
-    (sum, loc) => sum + loc.fee + loc.travelFee,
+    (sum, loc) => sum + loc.travelFee,
     0
   );
   return (
@@ -99,6 +101,34 @@ function computeTotal(b: BookingSelection): number {
     b.primaryTravelFee +
     additionalLocationsTotal
   );
+}
+
+/**
+ * Recalculates each additional location's travel fee as the distance from
+ * the previous stop in the chain (the primary location for the first
+ * additional stop, then each additional stop in turn). Must be re-run
+ * whenever the primary location or the additional-location list changes,
+ * so a removed or edited stop never leaves a stale fee behind on the ones
+ * after it.
+ */
+function recomputeLocationChain(
+  primary: BookingLocation | null,
+  locations: AdditionalLocation[]
+): AdditionalLocation[] {
+  let prevLat = primary?.lat ?? null;
+  let prevLng = primary?.lng ?? null;
+
+  return locations.map((loc) => {
+    const travelFee = calculateSequentialTravelFee(
+      prevLat,
+      prevLng,
+      loc.lat,
+      loc.lng
+    );
+    prevLat = loc.lat;
+    prevLng = loc.lng;
+    return { ...loc, travelFee };
+  });
 }
 
 export function BookingProvider({ children }: { children: React.ReactNode }) {
@@ -164,6 +194,7 @@ export function BookingProvider({ children }: { children: React.ReactNode }) {
         ...prev,
         primaryLocation: location,
         primaryTravelFee: travelFee,
+        additionalLocations: recomputeLocationChain(location, prev.additionalLocations),
       };
       newBooking.estimatedTotal = computeTotal(newBooking);
       return newBooking;
@@ -184,16 +215,17 @@ export function BookingProvider({ children }: { children: React.ReactNode }) {
 
   const addAdditionalLocation = (location: BookingLocation) => {
     setBooking((prev) => {
-      const travelFee = calculateTravelFee(location.lat, location.lng);
       const newLocation: AdditionalLocation = {
         ...location,
         id: `loc-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-        fee: ADDITIONAL_LOCATION_FEE,
-        travelFee,
+        travelFee: 0,
       };
       const newBooking = {
         ...prev,
-        additionalLocations: [...prev.additionalLocations, newLocation],
+        additionalLocations: recomputeLocationChain(prev.primaryLocation, [
+          ...prev.additionalLocations,
+          newLocation,
+        ]),
       };
       newBooking.estimatedTotal = computeTotal(newBooking);
       return newBooking;
@@ -204,7 +236,10 @@ export function BookingProvider({ children }: { children: React.ReactNode }) {
     setBooking((prev) => {
       const newBooking = {
         ...prev,
-        additionalLocations: prev.additionalLocations.filter((l) => l.id !== id),
+        additionalLocations: recomputeLocationChain(
+          prev.primaryLocation,
+          prev.additionalLocations.filter((l) => l.id !== id)
+        ),
       };
       newBooking.estimatedTotal = computeTotal(newBooking);
       return newBooking;

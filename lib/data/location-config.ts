@@ -23,13 +23,9 @@ export const CENTRAL_TRINIDAD_RADIUS_KM = 12;
 // falls outside the Central Trinidad service area defined above. Editable
 // via the NEXT_PUBLIC_TRAVEL_FEE_RATE_PER_KM environment variable (Vercel:
 // Settings -> Environment Variables, then redeploy) without editing this
-// file or any other code; falls back to TT$7/km below if the env var isn't set.
+// file or any other code; falls back to TT$10/km below if the env var isn't set.
 export const TRAVEL_FEE_RATE_PER_KM =
-  Number(process.env.NEXT_PUBLIC_TRAVEL_FEE_RATE_PER_KM) || 7;
-
-// Flat fee (TT$) charged per additional location requested beyond the
-// primary location, regardless of travel fee.
-export const ADDITIONAL_LOCATION_FEE = 150;
+  Number(process.env.NEXT_PUBLIC_TRAVEL_FEE_RATE_PER_KM) || 10;
 
 function toRad(value: number): number {
   return (value * Math.PI) / 180;
@@ -83,6 +79,27 @@ export function calculateTravelFee(
   const distanceOutsideCentral = distanceFromCenter - CENTRAL_TRINIDAD_RADIUS_KM;
   if (distanceOutsideCentral <= 0) return 0;
   return Math.round(distanceOutsideCentral * TRAVEL_FEE_RATE_PER_KM * 100) / 100;
+}
+
+/**
+ * Travel fee (TT$) for one leg of a multi-location booking: the straight-line
+ * distance from the previous stop to this one, multiplied by
+ * TRAVEL_FEE_RATE_PER_KM. Unlike the primary location's fee above, this is
+ * not gated by the Central Trinidad radius - every kilometer actually
+ * traveled between two real stops is charged, since it's added distance
+ * regardless of whether either stop happens to sit inside the free zone.
+ */
+export function calculateSequentialTravelFee(
+  fromLat: number | null | undefined,
+  fromLng: number | null | undefined,
+  toLat: number | null | undefined,
+  toLng: number | null | undefined
+): number {
+  if (fromLat == null || fromLng == null || toLat == null || toLng == null) {
+    return 0;
+  }
+  const distance = distanceKm(fromLat, fromLng, toLat, toLng);
+  return Math.round(distance * TRAVEL_FEE_RATE_PER_KM * 100) / 100;
 }
 
 // Services that manage their own scheduling and are exempt from the

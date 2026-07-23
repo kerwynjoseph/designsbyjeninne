@@ -387,7 +387,6 @@ export interface BookingLocationData {
 
 export interface AdditionalLocationData extends BookingLocationData {
   id: string;
-  fee: number;
   travelFee: number;
 }
 
@@ -442,7 +441,6 @@ function locationRows(data: PaymentEmailData): Array<[string, string | undefined
 
   (data.additionalLocations || []).forEach((loc, idx) => {
     rows.push([`Additional Location ${idx + 1}`, loc.address]);
-    rows.push([`Additional Location ${idx + 1} Fee`, `TT$${loc.fee.toLocaleString()}`]);
     if (loc.travelFee) {
       rows.push([`Travel Fee (Location ${idx + 1})`, `TT$${loc.travelFee.toLocaleString()}`]);
     }
@@ -462,10 +460,6 @@ function pricingBreakdownHtml(data: PaymentEmailData): string {
   ];
 
   (data.additionalLocations || []).forEach((loc, idx) => {
-    rows.push([
-      `Additional Location ${idx + 1} Fee`,
-      `TT$${loc.fee.toLocaleString()}`,
-    ]);
     if (loc.travelFee) {
       rows.push([`Travel Fee (Location ${idx + 1})`, `TT$${loc.travelFee.toLocaleString()}`]);
     }

@@ -300,20 +300,15 @@ export function PaymentInstructions() {
                   <span className="text-gold-300">+TT${booking.primaryTravelFee.toLocaleString()}</span>
                 </div>
               )}
-              {booking.additionalLocations.map((loc, idx) => (
-                <div key={loc.id} className="contents">
-                  <div className="flex justify-between font-sans text-sm gap-4">
-                    <span className="text-warmgray flex-shrink-0">Additional Location {idx + 1}</span>
-                    <span className="text-gold-300 text-right">+TT${loc.fee.toLocaleString()}</span>
-                  </div>
-                  {loc.travelFee > 0 && (
-                    <div className="flex justify-between font-sans text-sm gap-4">
+              {booking.additionalLocations.map(
+                (loc, idx) =>
+                  loc.travelFee > 0 && (
+                    <div key={loc.id} className="flex justify-between font-sans text-sm gap-4">
                       <span className="text-warmgray flex-shrink-0">Travel Fee (Location {idx + 1})</span>
                       <span className="text-gold-300 text-right">+TT${loc.travelFee.toLocaleString()}</span>
                     </div>
-                  )}
-                </div>
-              ))}
+                  )
+              )}
               {booking.projectDetails && (
                 <div className="pt-2">
                   <p className="text-warmgray text-xs uppercase tracking-wider mb-1">Project Details</p>
