@@ -6,6 +6,7 @@ export const metadata = {
   title: "Services | Designs by Jeninne",
   description:
     "Explore our comprehensive creative services: graphic design, videography, social media management, and more.",
+  alternates: { canonical: "/services" },
 };
 
 export default function ServicesPage() {

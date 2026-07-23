@@ -6,6 +6,7 @@ export const metadata = {
   title: "Services & Pricing | Designs by Jeninne",
   description:
     "Professional videography packages. Bronze, Silver, and Gold tiers for content, events, weddings, and more.",
+  alternates: { canonical: "/pricing" },
 };
 
 export default function Page() {

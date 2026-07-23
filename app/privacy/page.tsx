@@ -4,6 +4,7 @@ import { Footer } from "@/components/layout/Footer";
 export const metadata = {
   title: "Privacy Policy | Designs by Jeninne",
   description: "How Designs by Jeninne collects, uses, and protects your information.",
+  alternates: { canonical: "/privacy" },
 };
 
 export default function PrivacyPage() {

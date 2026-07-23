@@ -5,6 +5,8 @@ import { BookingReviewPage } from "@/components/sections/BookingReviewPage";
 export const metadata = {
   title: "Review Your Booking | Designs by Jeninne",
   description: "Review and customize your booking before payment.",
+  alternates: { canonical: "/booking" },
+  robots: { index: false, follow: true },
 };
 
 export default function BookingPage() {

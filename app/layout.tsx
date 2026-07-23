@@ -5,6 +5,7 @@ import { SmoothScrollProvider } from "@/lib/lenis";
 import { LoadingScreen } from "@/components/shared/LoadingScreen";
 import { BookingProvider } from "@/lib/booking-context";
 import { Analytics } from "@vercel/analytics/next";
+import { StructuredData } from "@/components/shared/StructuredData";
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
@@ -25,6 +26,7 @@ export const metadata: Metadata = {
   title: "Designs by Jeninne | Luxury Creative Studio",
   description:
     "Premium creative design studio specializing in luxury branding, graphic design, videography, and social media management.",
+  alternates: { canonical: "/" },
   manifest: "/site.webmanifest",
   icons: {
     icon: [
@@ -57,6 +59,8 @@ export default function RootLayout({
       className={`${cormorant.variable} ${inter.variable} h-full antialiased scroll-smooth`}
     >
       <body className="min-h-full flex flex-col bg-ink text-ivory antialiased">
+        <StructuredData />
+
         {/* Ambient gradient backdrop */}
         <div className="gradient-drift" />
 

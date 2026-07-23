@@ -8,6 +8,7 @@ export const metadata = {
   title: "Start Your Project | Designs by Jeninne",
   description:
     "Ready to bring your vision to life? Fill out our project inquiry form to get started with Designs by Jeninne.",
+  alternates: { canonical: "/contact" },
 };
 
 export default function ContactPage() {

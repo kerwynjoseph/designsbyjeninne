@@ -6,6 +6,8 @@ export const metadata = {
   title: "Payment Instructions | Designs by Jeninne",
   description:
     "Complete your booking with our flexible payment options. Bank transfer, payment plan, or WhatsApp inquiry.",
+  alternates: { canonical: "/payment" },
+  robots: { index: false, follow: true },
 };
 
 export default function PaymentPage() {

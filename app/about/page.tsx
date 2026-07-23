@@ -6,6 +6,7 @@ export const metadata = {
   title: "About Jeninne | Designs by Jeninne",
   description:
     "Meet Jeninne Belfast, Creative Director and Founder of Designs by Jeninne. Learn about our creative studio, services, and vision.",
+  alternates: { canonical: "/about" },
 };
 
 export default function AboutPage() {
@@ -13,7 +14,7 @@ export default function AboutPage() {
     <>
       <Nav />
       <main className="w-full bg-ink">
-        <About />
+        <About headingLevel="h1" />
       </main>
       <Footer />
     </>

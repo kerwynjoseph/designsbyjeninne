@@ -43,7 +43,9 @@ const AnimatedCounter = ({
   );
 };
 
-export function About() {
+export function About({ headingLevel = "h2" }: { headingLevel?: "h1" | "h2" } = {}) {
+  const HeadingTag = headingLevel;
+
   const router = useRouter();
 
   const handleScroll = () => {
@@ -110,15 +112,16 @@ export function About() {
             </motion.div>
 
             {/* Heading */}
-            <motion.h2
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: MOTION.normal, delay: 0.1 }}
-              className="font-serif text-5xl md:text-6xl font-light text-ivory mb-8 leading-tight"
             >
-              Meet Jeninne Belfast
-            </motion.h2>
+              <HeadingTag className="font-serif text-5xl md:text-6xl font-light text-ivory mb-8 leading-tight">
+                Meet Jeninne Belfast
+              </HeadingTag>
+            </motion.div>
 
             {/* Bio Content */}
             <motion.div
