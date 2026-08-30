@@ -132,6 +132,15 @@ export async function POST(request: NextRequest) {
       adminEmailError: adminEmailResult.error,
     });
 
+    // See the note in app/api/contact/route.ts: a payment submission the studio
+    // never receives must not be reported to the client as received.
+    if (!adminEmailResult.success) {
+      return NextResponse.json(
+        { error: "Failed to deliver your payment submission" },
+        { status: 502 }
+      );
+    }
+
     return NextResponse.json(
       {
         success: true,

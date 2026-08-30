@@ -90,6 +90,16 @@ export async function POST(request: NextRequest) {
       adminEmailError: adminEmailResult.error,
     });
 
+    // The admin notification IS the lead. If it never left, reporting success
+    // would tell the client we have their inquiry when we don't, so fail loudly
+    // and let them reach us another way. (Details stay in the server log above.)
+    if (!adminEmailResult.success) {
+      return NextResponse.json(
+        { error: "Failed to deliver your inquiry" },
+        { status: 502 }
+      );
+    }
+
     return NextResponse.json(
       {
         success: true,
