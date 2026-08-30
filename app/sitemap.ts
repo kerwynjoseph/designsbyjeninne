@@ -3,7 +3,15 @@ import type { MetadataRoute } from "next";
 const BASE_URL = "https://www.designsbyjeninne.com";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const routes = ["", "/about", "/services", "/pricing", "/portfolio", "/contact"];
+  const routes = [
+    "",
+    "/about",
+    "/services",
+    "/pricing",
+    "/portfolio",
+    "/consultation",
+    "/contact",
+  ];
 
   return routes.map((route) => ({
     url: `${BASE_URL}${route}`,

@@ -10,6 +10,7 @@ const navItems = [
   { label: "Pricing", href: "/pricing" },
   { label: "Portfolio", href: "/portfolio" },
   { label: "About", href: "/about" },
+  { label: "Consultation", href: "/consultation" },
   { label: "Contact", href: "/contact" },
 ];
 
@@ -64,7 +65,7 @@ export function Nav() {
           </button>
 
           {/* Desktop Menu */}
-          <div className="hidden md:flex items-center gap-12">
+          <div className="hidden md:flex items-center gap-6 lg:gap-10">
             {navItems.map((item) => (
               <button
                 key={item.label}
