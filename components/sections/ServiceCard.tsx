@@ -35,6 +35,7 @@ export function ServiceCard({ service, index }: ServiceCardProps) {
   const [waitlistEmail, setWaitlistEmail] = useState("");
   const [waitlistSubmitted, setWaitlistSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [waitlistError, setWaitlistError] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const IconComponent =
@@ -60,9 +61,10 @@ export function ServiceCard({ service, index }: ServiceCardProps) {
   const handleWaitlistSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setWaitlistError("");
 
     try {
-      await fetch("/api/waitlist", {
+      const response = await fetch("/api/waitlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -70,11 +72,18 @@ export function ServiceCard({ service, index }: ServiceCardProps) {
           service: service.id,
         }),
       });
+
+      if (!response.ok) {
+        setWaitlistError("Couldn't register you. Please try again.");
+        return;
+      }
+
       setWaitlistSubmitted(true);
       setWaitlistEmail("");
       setTimeout(() => setWaitlistSubmitted(false), 3000);
     } catch (error) {
       console.error("Waitlist signup failed:", error);
+      setWaitlistError("Couldn't register you. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -169,7 +178,7 @@ export function ServiceCard({ service, index }: ServiceCardProps) {
                       animate={{ opacity: 1 }}
                       className="text-sm font-sans text-gold-500 text-center py-3"
                     >
-                      ✓ You're on the list!
+                      ✓ You&apos;re on the list!
                     </motion.div>
                   ) : (
                     <form
@@ -192,6 +201,11 @@ export function ServiceCard({ service, index }: ServiceCardProps) {
                         {isSubmitting ? "..." : "Notify"}
                       </button>
                     </form>
+                  )}
+                  {waitlistError && (
+                    <p role="alert" className="text-red-400 text-xs mt-2 text-center">
+                      {waitlistError}
+                    </p>
                   )}
                 </>
               )}

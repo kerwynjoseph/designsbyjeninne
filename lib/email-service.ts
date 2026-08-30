@@ -619,3 +619,56 @@ export function generatePaymentAdminNotificationEmail(data: PaymentEmailData): s
 
   return emailShell("Payment Received", "New Payment Submission", body);
 }
+
+/* ------------------------------------------------------------------ */
+/* Waitlist (coming-soon service interest)                            */
+/* ------------------------------------------------------------------ */
+
+export interface WaitlistEmailData {
+  email: string;
+  serviceName: string;
+}
+
+export function generateWaitlistClientEmail(data: WaitlistEmailData): string {
+  return emailShell(
+    "You're on the List",
+    "Waitlist Confirmation",
+    `
+      <p>Thank you for registering your interest in <strong>${data.serviceName}</strong>.</p>
+      <p>
+        This service is launching soon. You're now on the waitlist, and we'll
+        email you at this address the moment it becomes available.
+      </p>
+      ${section(
+        "Your Registration",
+        detailTable([
+          ["Service", data.serviceName],
+          ["Email", data.email],
+          ["Registered", timestampNow()],
+        ])
+      )}
+      <p>In the meantime, have a look at what we're offering right now.</p>
+      <p style="text-align:center;">
+        <a class="button" href="${SITE_URL}/services">View Our Services</a>
+      </p>
+    `
+  );
+}
+
+export function generateWaitlistAdminEmail(data: WaitlistEmailData): string {
+  return emailShell(
+    "New Waitlist Signup",
+    "Service Interest Registered",
+    `
+      ${section(
+        "Signup Details",
+        detailTable([
+          ["Service", data.serviceName],
+          ["Email", data.email],
+          ["Registered", timestampNow()],
+        ])
+      )}
+      <p>Reply directly to this email to reach the client.</p>
+    `
+  );
+}

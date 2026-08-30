@@ -51,6 +51,7 @@ export function PaymentInstructions() {
     paymentMethod: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [submitError, setSubmitError] = useState("");
 
   const bankingDetails = {
     bankName: "JMMB",
@@ -101,6 +102,7 @@ export function PaymentInstructions() {
       return;
     }
     setErrors({});
+    setSubmitError("");
     setIsSubmitting(true);
 
     try {
@@ -146,10 +148,14 @@ export function PaymentInstructions() {
       if (response.ok) {
         setSubmitted(true);
       } else {
-        alert("Error submitting payment. Please try again.");
+        setSubmitError(
+          "We couldn't submit your payment. Please try again, or send your receipt to info@designsbyjeninne.com and we'll process it manually."
+        );
       }
     } catch {
-      alert("Error submitting payment. Please try again.");
+      setSubmitError(
+        "We couldn't reach the server. Check your connection and try again, or send your receipt to info@designsbyjeninne.com."
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -470,6 +476,15 @@ export function PaymentInstructions() {
                 >
                   {isSubmitting ? "Submitting..." : "Submit Payment"}
                 </motion.button>
+
+                {submitError && (
+                  <p
+                    role="alert"
+                    className="text-red-400 text-sm text-center leading-relaxed"
+                  >
+                    {submitError}
+                  </p>
+                )}
               </form>
             </motion.div>
 
